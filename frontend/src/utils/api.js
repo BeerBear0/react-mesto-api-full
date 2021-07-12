@@ -5,40 +5,49 @@ class Api {
         this._headers = headers;
     }
 
+    getInfoFromServer(token) {
+        return Promise.all([this.getUserInfo(token),this.getInitialCards(token)])
+    }
+
     // обработчик респонсов сервера
     _handleResponse(res){
         if (res.ok) {
             return res.json();
         } else {
-            return Promise.reject(`Error! : ${res.status} 123`)
+            return Promise.reject(`Error! : ${res.status}`)
         }
 
     }
 
     // получение начальных данных от пользователя
-    getUserInfo() { // Запрос на загрузку данных пользователя
+    getUserInfo(token) { // Запрос на загрузку данных пользователя
         return fetch(`${this._baseUrl}/users/me`, {
-            headers: this._headers
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
         })
             .then(this._handleResponse)
     }
 
 
     // получение серверных карточек
-    getInitialCards() {
+    getInitialCards(token) {
         return fetch(`${this._baseUrl}/cards`, {
-                headers: this._headers
+            'Authorization': `Bearer ${token}`,
+            'Content-type': 'application/json'
             }
         )
             .then(this._handleResponse)
     }
 
     //установка данных профиля
-    patchUserProfile(input) {
+    patchUserProfile(input, token) {
         return fetch(`${this._baseUrl}/users/me`,
             {
                 method: 'PATCH',
-                headers: this._headers,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-type': 'application/json'
+                },
                 body: JSON.stringify({
                     name: input.name,
                     about: input.about
@@ -49,10 +58,13 @@ class Api {
 
 
     // смена аватары
-    patchAvatar(input) {
+    patchAvatar(input, token) {
         return fetch(`${this._baseUrl}/users/me/avatar`,  {
             method: 'PATCH',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify({
                 avatar: input.avatar
             })
@@ -60,10 +72,13 @@ class Api {
             .then(this._handleResponse)
     }
 
-    postUserCard(input) {
+    postUserCard(input, token) {
         return fetch(`${this._baseUrl}/cards`,  {
             method: 'POST',
-            headers: this._headers,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify({
                 name: input.name,
                 link: input.link
@@ -71,48 +86,38 @@ class Api {
         })
             .then(this._handleResponse)
     }
-    changeLikeCardStatus(id, isLiked) {
+    changeLikeCardStatus(id, isLiked, token) {
         if(isLiked) {
             return fetch(`${this._baseUrl}/cards/likes/${id}`, {
                 method: 'Delete',
-                headers: this._headers
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-type': 'application/json'
+                }
             })
                 .then(this._handleResponse)
         }
         else {
             return fetch(`${this._baseUrl}/cards/likes/${id}`, {
                 method: 'PUT',
-                headers: this._headers
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-type': 'application/json'
+                }
             })
                 .then(this._handleResponse)
         }
     }
 
-    //  постановка лаек
-    // putLike(id) {
-    //     return fetch(`${this._baseUrl}/cards/likes/${id}`,{
-    //             method: 'PUT',
-    //             headers: this._headers
-    //         }
-    //     )
-    //         .then(this._handleResponse)
-    // }
-    //
-    // // снятие лаека
-    // deleteLike(id) {
-    //     return fetch(`${this._baseUrl}/cards/likes/${id}`, {
-    //             method: 'DELETE',
-    //             headers: this._headers
-    //         }
-    //     )
-    //         .then(this._handleResponse)
-    // }
 
     // удалить карточку
-    deleteCard(id) {
+    deleteCard(id, token) {
         return fetch(`${this._baseUrl}/cards/${id}`,  {
                 method: 'DELETE',
-                headers: this._headers
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-type': 'application/json'
+                }
             }
         )
             .then(this._handleResponse)
@@ -121,9 +126,5 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-22',
-    headers: {
-        authorization: '9e52048b-0cd1-4d2d-8134-21ed3d4ebe58',
-        'Content-Type': 'application/json'
-    }
+    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`
 })

@@ -37,6 +37,8 @@ function App()
 
     const history = useHistory();
 
+
+
     React.useEffect(() => {
         Promise.all([api.getInitialCards(), api.getUserInfo()])
             .then(([cardsData, userData]) => {
