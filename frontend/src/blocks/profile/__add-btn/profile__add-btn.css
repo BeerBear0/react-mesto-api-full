@@ -1,0 +1,8 @@
+.profile__add-btn {
+    width: 16px;
+    height: 16px;
+}
+.profile__add-btn:hover {
+    opacity: .6;
+    cursor: pointer;
+}

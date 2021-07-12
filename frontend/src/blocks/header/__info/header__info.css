@@ -1,0 +1,23 @@
+.header__info {
+    margin-top: 6px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@media (min-width: 420px) and (max-width: 910px) {
+    .header__info {
+        max-width: 250px;
+        flex-direction: column;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 425px) {
+    .header__info {
+        justify-content: center;
+        flex-direction: column;
+        border-bottom: #545454 1px solid;
+    }
+}

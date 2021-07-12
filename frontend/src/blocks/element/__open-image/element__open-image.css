@@ -1,0 +1,8 @@
+.element__open-image {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    padding: 0;
+}
+.element__open-image:hover {
+    cursor: pointer;
+}

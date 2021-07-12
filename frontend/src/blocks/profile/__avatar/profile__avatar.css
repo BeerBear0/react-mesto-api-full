@@ -1,0 +1,13 @@
+.profile__avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    border-radius: 50%;
+}
+
+@media (min-width: 320px) and (max-width: 768px) {
+    .profile__avatar {
+        flex-direction: column;
+        margin: 0 auto;
+    }
+}

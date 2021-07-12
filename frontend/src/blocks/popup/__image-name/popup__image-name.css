@@ -1,0 +1,10 @@
+.popup__image-name {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    color: #FFFFFF;
+    grid-column: 1;
+    grid-row: 3;
+    margin: 10px auto auto 0;
+}
