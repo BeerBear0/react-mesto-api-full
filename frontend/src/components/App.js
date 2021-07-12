@@ -34,32 +34,33 @@ function App()
     const [infoPopupOpen, setInfoPopupOpen] = React.useState(false);
     const [isSuccess, setIsSuccess] = React.useState(false);
     const [email, setEmail] = React.useState('');
-
+    const [token, settoken] = React.useState('');
     const history = useHistory();
 
 
-
     React.useEffect(() => {
-        Promise.all([api.getInitialCards(), api.getUserInfo()])
-            .then(([cardsData, userData]) => {
-            setCards(cardsData);
-            setCurrentUser(userData);
-        })
-            .catch(err => console.log(err))
-    }, [])
+        if (loggedIn) {
+            api.getInfoFromServer(token)
+                .then(([cardsData, userData]) => {
+                    setCurrentUser(userData)
+                    setCards(cardsData)
+                })
+                .catch(err => console.log(err))
+        }
+    }, [loggedIn, token])
 
         function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
         const isLiked = card.likes.some(i => i._id === currentUser._id);
         // Отправляем запрос в API и получаем обновлённые данные карточки
-        api.changeLikeCardStatus(card._id, isLiked)
+        api.changeLikeCardStatus(card._id, isLiked, token)
             .then(newCard => {
                 setCards(state => state.map(c => c._id === card._id ? newCard : c));
             })
             .catch(err => console.error(err));
     }
     function handleCardDelete(card) {
-        api.deleteCard(card._id)
+        api.deleteCard(card._id, token)
             .then(_ => {
                 setCards(state => {
                     return state.filter(c => c._id !== card._id);
@@ -89,16 +90,16 @@ function App()
         setInfoPopupOpen(false);
     }
 
-    function handleUpdateUser({name, about}) {
-        api.patchUserProfile({name, about})
+    function handleUpdateUser(input) {
+        api.patchUserProfile(input, token)
             .then(res => {
                 setCurrentUser(res);
                 closeAllPopup();
             }).catch(err => console.error(err));
     }
 
-    function handleUpdateAvatar({avatar}) {
-        api.patchAvatar({avatar})
+    function handleUpdateAvatar(input) {
+        api.patchAvatar(input, token)
             .then(res => {
                 setCurrentUser(res);
                 closeAllPopup();
@@ -106,9 +107,9 @@ function App()
             .catch(err => console.error(err));
     }
 
-    function handleAddPlaceSubmit({name, link}) {
+    function handleAddPlaceSubmit(input) {
 
-        api.postUserCard({name, link})
+        api.postUserCard(input, token)
             .then(card => {
                 setCards([card, ...cards])
                 closeAllPopup();
@@ -157,6 +158,7 @@ function App()
     function tokenCheck () {
         const jwt = localStorage.getItem('jwt');
         if(jwt) {
+            settoken(jwt);
             auth.getContent(jwt)
                 .then(res => {
                     if(res) {
@@ -175,6 +177,7 @@ function App()
     React.useEffect(() => {
         tokenCheck()
     }, [])
+
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
