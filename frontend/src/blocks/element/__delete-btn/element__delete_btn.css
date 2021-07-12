@@ -8,8 +8,8 @@
     right: 15px;
     top: 18px;
     background-image: url("../../../images/Trash.svg");
-    background-repeat: no-repeat;
     display: none;
+    background-repeat: no-repeat;
 }
 .element__delete-btn:hover {
     opacity: .6;
