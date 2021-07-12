@@ -1,4 +1,4 @@
-const baseAuthUrl = 'https://auth.nomoreparties.co'
+const baseAuthUrl = `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`
 
 export const register = (email, password) => {
     return fetch(`${baseAuthUrl}/signup`, {
@@ -28,7 +28,7 @@ export const register = (email, password) => {
                         return res.json();
                     }
                     if (res.status === 400) {
-                        throw new Error('Некоректно заполнено одно из полей')
+                        throw new Error('Некорректно заполнено одно из полей')
                     }
                     if (res.status === 401) {
                         throw new Error('Пользователь с email не найден')
