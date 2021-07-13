@@ -1,4 +1,4 @@
-const baseAuthUrl = `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3000'}`
+const baseAuthUrl = `http://mesto.nikko.22.nomoredomains.monster`
 
 export const register = (email, password) => {
     return fetch(`${baseAuthUrl}/signup`, {
