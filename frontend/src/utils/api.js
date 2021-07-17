@@ -126,5 +126,6 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: `http://mesto.nikko.22.nomoredomains.monster`
+    baseUrl: `https://api.mesto.nikko.22.nomoredomains.monster`
+    // bseUrl: `http://localhost:3000`
 })

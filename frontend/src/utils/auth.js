@@ -1,45 +1,27 @@
-const baseAuthUrl = `http://mesto.nikko.22.nomoredomains.monster`
+const baseAuthUrl = `https://api.mesto.nikko.22.nomoredomains.monster`
+// const baseAuthUrl = 'http://localhost:3000';
+const checkResponse = (response) => response.ok ? response.json() : Promise.reject(`'Ошибка: ${response.status}'`)
 
 export const register = (email, password) => {
     return fetch(`${baseAuthUrl}/signup`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ password, email })
     })
-        .then((res) => {
-                if (res.status !== 400){
-                    return res.json();
-                }
-            }
-        )
-        .then((res) => {
-            return res;
-        })
+        .then(checkResponse);
 };
 
     export const authorize = (email, password) => {
         return fetch(`${baseAuthUrl}/signin`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify({ email, password })
         })
-            .then(res => {
-                    if (res.ok) {
-                        return res.json();
-                    }
-                    if (res.status === 400) {
-                        throw new Error('Некорректно заполнено одно из полей')
-                    }
-                    if (res.status === 401) {
-                        throw new Error('Пользователь с email не найден')
-                    }
-            })
-            .then(data => {
-                if (data.token) {
-                    localStorage.setItem('jwt', data.token)
-                    return data
-                }
-            })
+            .then(checkResponse)
     }
 
     export const getContent = (token) => {

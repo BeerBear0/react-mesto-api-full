@@ -1,5 +1,5 @@
 import React from "react";
-import {Switch, Route, useHistory, Redirect} from 'react-router-dom'
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom'
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { api } from "../utils/api";
 
