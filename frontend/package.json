@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "react": "^17.0.2",
@@ -15,9 +15,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && scp -r ./build/* teplophizik@178.154.240.106:/home/teplophizik/mesto-15/frontend/build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build &&  scp -r ./build/* nikko_00@84.201.173.227:/home/nikko_00/mesto-frontend"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

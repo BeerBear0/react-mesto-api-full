@@ -1,42 +1,31 @@
 const router = require('express').Router();
-
 const { celebrate, Joi } = require('celebrate');
-
 const {
-  getAllUsers, getUserById, updateProfile, updateAvatar, getCurrentUser,
+  getUsers,
+  getUserInfo,
+  getUser,
+  updateProfile,
+  updateAvatar,
 } = require('../controllers/users');
+const { urlValidator } = require('../helpers/validators');
 
-router.get('/users', getAllUsers);
-
-router.get('/users/me',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required().max(30).min(2),
-      about: Joi.string().required().max(30).min(2),
-    }),
-  }), getCurrentUser);
-
-router.get('/users/:userId',
-  celebrate({
-    body: Joi.object().keys({
-      _id: Joi.string().length(24).hex(),
-    }),
+router.get('/', getUsers);
+router.get('/me', getUserInfo);
+router.get('/:userId', celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().hex().length(24),
   }),
-  getUserById);
-
-router.patch('/users/me',
-  celebrate({
-    body: Joi.object().keys({
-      name: Joi.string().required().max(30).min(2),
-      about: Joi.string().required().max(30).min(2),
-    }),
-  }), updateProfile);
-router.patch('./users/me/avatar',
-  celebrate({
-    body: Joi.object().keys({
-      avatar: Joi.string().required().pattern(/^(https:\/\/{2}{?:www}\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/),
-    }),
+}), getUser);
+router.patch('/me', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }),
-  updateAvatar);
+}), updateProfile);
+router.patch('/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().required().custom(urlValidator),
+  }),
+}), updateAvatar);
 
 module.exports = router;

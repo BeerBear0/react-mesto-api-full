@@ -1,23 +1,36 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { errors, celebrate, Joi } = require('celebrate');
-const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const { celebrate, Joi, errors } = require('celebrate');
+const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
+const {
+  login,
+  createUser,
+  logout,
+} = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
+const { errorHandler } = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const allowedCors = require('./middlewares/allowedCors');
-
-const app = express();
-const { PORT = 3000 } = process.env;
-app.use(cors());
+const { allowAccess } = require('./middlewares/cors');
+const { urlValidator } = require('./helpers/validators');
 
 require('dotenv').config();
 
+const app = express();
+const { PORT = 3000 } = process.env;
+app.disable('x-powered-by');
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -25,45 +38,48 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(requestLogger);
-app.use(allowedCors);
+
+app.use(limiter);
+
+app.use(allowAccess);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
-    throw new Error('Осторожно сервер падает!');
-  }, 2);
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
 });
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required().min(8),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
   }),
 }), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().max(30).min(2),
-    about: Joi.string().max(30).min(2),
-    avatar: Joi.string().pattern(/^((http|https):\/\/)(www\.)?([\w\W\d]{1,})(\.)([a-zA-Z]{1,10})([\w\W\d]{1,})?$/),
-    email: Joi.string().email().required(),
-    password: Joi.string().required().min(8),
-  }).unknown(true),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().custom(urlValidator),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+  }),
 }), createUser);
+app.get('/logout', logout);
 
 app.use(auth);
 
-app.use('/', require('./routes/index'));
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
 
-app.use(errorLogger);
-
-app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-  });
+app.use((req, res, next) => {
+  next(new Error('Not found'));
 });
 
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
+
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`);
 });
