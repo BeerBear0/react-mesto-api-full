@@ -1,11 +1,11 @@
 
 class Api {
-    constructor({baseUrl, headers}) {
+    constructor({baseUrl}) {
         this._baseUrl = baseUrl;
-        this._headers = headers;
     }
 
     getInfoFromServer(token) {
+        console.log(token)
         return Promise.all([this.getUserInfo(token),this.getInitialCards(token)])
     }
 
@@ -31,6 +31,7 @@ class Api {
 
     // получение серверных карточек
     getInitialCards(token) {
+        console.log(token, '1234')
         return fetch(`${this._baseUrl}/cards`, {
             'Authorization': `Bearer ${token}`,
             'Content-type': 'application/json'
@@ -126,6 +127,6 @@ class Api {
 }
 
 export const api = new Api({
-    baseUrl: `https://api.mesto.nikko.22.nomoredomains.monster`
-    // bseUrl: `http://localhost:3000`
+    // baseUrl: `https://api.mesto.nikko.22.nomoredomains.monster`
+    baseUrl: `http://localhost:3000`
 })

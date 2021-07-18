@@ -1,14 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
-
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const AuthError = require('../errors/AuthError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-
 // Поиск всех юзеров
 module.exports.getAllUsers = (req, res, next) => {
   User.find({})
@@ -93,7 +91,7 @@ module.exports.login = (req, res, next) => {
       );
       res.send({ token });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       next(err);
     });

@@ -1,5 +1,5 @@
-const baseAuthUrl = `https://api.mesto.nikko.22.nomoredomains.monster`
-// const baseAuthUrl = 'http://localhost:3000';
+// const baseAuthUrl = `https://api.mesto.nikko.22.nomoredomains.monster`
+const baseAuthUrl = 'http://localhost:3000';
 const checkResponse = (response) => response.ok ? response.json() : Promise.reject(`'Ошибка: ${response.status}'`)
 
 export const register = (email, password) => {
