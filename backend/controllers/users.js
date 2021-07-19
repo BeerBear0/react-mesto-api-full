@@ -72,7 +72,7 @@ module.exports.login = (req, res, next) => {
         if (!matched) {
           return Promise.reject(new Error('No matches'));
         }
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 's-s-k', { expiresIn: '7d' });
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'ssss-ssss-k', { expiresIn: '7d' });
         res.cookie('jwt', token, {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
