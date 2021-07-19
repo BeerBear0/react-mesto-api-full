@@ -1,8 +1,0 @@
-.profile__avatar_edit-icon {
-    height: 100%;
-    /*background-image: url("./src/images/editAva.png");*/
-}
-.profile__avatar_edit-icon:hover {
-    opacity: .2;
-    cursor: pointer;
-}

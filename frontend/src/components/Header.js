@@ -1,53 +1,38 @@
-import React from "react";
-import logo from "../images/Vector.svg";
-import {Link, Route} from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom';
 
-function Header({ onSignOut, email, loggedIn}) {
-    const [dropDownIsOpen, setDropDownIsOpen] = React.useState('');
-    const [closeMenuBtnActive, setCloseMenuBtnActive] = React.useState('');
+function Header(props) {
+  const path = useLocation().pathname;
+  const history = useHistory();
+  let btnTxt = 'Выйти';
+  let to = '/';
 
-    const handleBtnClick = () => {
-        setDropDownIsOpen(!dropDownIsOpen);
-        setCloseMenuBtnActive(!closeMenuBtnActive);
+  if (path === '/sign-up') {
+    btnTxt = 'Войти';
+    to = '/sign-in';
+  } else if (path === '/sign-in') {
+    btnTxt = 'Регистрация';
+    to = '/sign-up';
+  }
+
+  function authNav() {
+    if (!props.loggedIn) {
+      history.push(to);
+    } else {
+      props.exitUser();
     }
+  }
 
-    React.useEffect(() => {
-        handleBtnClick()
-    }, [])
-
-    const layout = (
-        <div className={`header__info ${closeMenuBtnActive && loggedIn ? 'header__info_type_mobile' : ''}`}>
-            <p className="header__email">{email}</p>
-            <button className="header__button" onClick={onSignOut} type="button">Выйти</button>
-        </div>
-    )
-
-    return (
-        <header className="header">
-            <div className={`header__wrapper ${ dropDownIsOpen ? '' : 'header__wrapper_type_active'}`}>{layout}</div>
-            <div className="header__container">
-               <img src={logo} alt="Логотип Место" className="header__logo" />
-                { loggedIn ? <button className={`header__dropdown ${dropDownIsOpen ? '' : 'header__dropdown_active'}`} onClick={handleBtnClick} type='button'/>: ''}
-                <nav className="header__routes">
-
-                    <Route exact path="/sign-up">
-                        <Link className="header__link" to='/sign-in'>Войти</Link>
-                    </Route>
-
-                    <Route exact path="/sign-in">
-                        <Link className="header__link" to='/sign-up'>Регистрация</Link>
-                    </Route>
-
-                    <Route exact path="/">
-                        <div className={`header__wrapper ${ dropDownIsOpen ? 'header__wrapper_type_active' : '' }`}>
-                            {layout}
-                        </div>
-                    </Route>
-                </nav>
-            </div>
-        </header>
-    )
-
+  return (
+    <header className="header">
+      <a href="/" target="_self" className="header__logo"/>
+      <div className="header__profile">
+        {props.loggedIn && <p className="header__email">{props.email}</p>}
+        <button onClick={authNav} className="header__action">
+          {btnTxt}
+        </button>
+      </div>
+    </header>
+  );
 }
 
-export default Header
+export default Header;

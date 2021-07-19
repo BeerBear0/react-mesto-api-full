@@ -1,7 +1,0 @@
-.header__content {
-    display: flex;
-    justify-content: space-between;
-    padding-top:  40px;
-    border-top: 1px solid #545454 ;
-    opacity: .7;
-}

@@ -1,49 +1,44 @@
-import React from "react"
+import { useState } from 'react';
 
+function Login(props) {
+  const [email, setEmail] = useState('');
+  const [password, setPass] = useState('');
 
+  function emailChange(e) {
+    setEmail(e.target.value);
+  }
 
-function Login ({ onLogin } ) {
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
+  function passChange(e) {
+    setPass(e.target.value);
+  }
 
-    function handleEmailChange (evt) {
-        setEmail(evt.target.value)
-    }
-    function handlePasswordChange (evt) {
-        setPassword(evt.target.value)
-    }
-    function handleSubmit(evt) {
-        evt.preventDefault();
-        if(!email || !password) {
-            return;
-        }
-        onLogin(email, password)
-    }
-    return(
-        <form className="login__container" onSubmit={handleSubmit}>
-            <h3 className="popup__title login__title">Вход</h3>
-            <input
-                onChange={handleEmailChange}
-                value={email || ''}
-                className="popup__input login__input"
-                type="email"
-                name="email"
-                placeholder="Email"
-                required
-            />
-            <input
-                onChange={handlePasswordChange}
-                value={password || ''}
-                className="popup__input login__input"
-                type="password"
-                name="password"
-                placeholder="Пароль"
-                required
-            />
-            <button
-                className="popup__submit login__submit"
-                type="submit">Войти</button>
-        </form>
-    )
+  async function authorize(e) {
+    e.preventDefault();
+    props.onSubmit({ email, password });
+  }
+
+  return (
+    <form className="auth-form" onSubmit={authorize}>
+      <h4 className="auth-form__header">Вход</h4>
+      <input
+        className="auth-form__input"
+        type="email"
+        value={email}
+        onChange={emailChange}
+        placeholder="Email"
+      />
+      <input
+        className="auth-form__input"
+        type="password"
+        value={password}
+        onChange={passChange}
+        placeholder="Пароль"
+      />
+      <button className="auth-form__button" type="submit">
+        Войти
+      </button>
+    </form>
+  );
 }
- export default Login;
+
+export default Login;

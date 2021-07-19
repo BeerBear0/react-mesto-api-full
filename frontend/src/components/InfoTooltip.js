@@ -1,20 +1,29 @@
-import React from 'react'
-import success from '../images/Success.png'
-import fail from '../images/Fail.png'
+import success from '../images/success.svg';
+import error from '../images/error.svg';
 
-
-function InfoTooltip({ isOpen, onClose, isSuccess}) {
-
-    return (
-        <div className={`popup ${isOpen && 'popup__opened'}`}>
-            <div className="popup__container">
-                <button className="popup__close-btn" onClick={onClose} type="button" />
-                <div className="popup__wrapper" >
-                    <img className="popup__infostatus" src={`${ isSuccess ? success : fail }`} alt="statusLogo" />
-                    <h3 className="popup__title popup__text">{`${isSuccess ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте еще раз.'}`}</h3>
-                </div>
-            </div>
-        </div>
-    )
+function InfoTooltip(props) {
+  const content = {
+    ok: { img: success, txt: 'Вы успешно зарегистрировались!' },
+    not: { img: error, txt: 'Что-то пошло не так! Попробуйте ещё раз.' },
+  };
+  return (
+    <div className={`popup ${props.isOpen ? 'popup_opened' : ''}`}>
+      <div className="popup__container abs-center">
+        <button
+          aria-label="Закрыть всплывающее окно"
+          type="button"
+          className="popup__close"
+          onClick={props.onClose}
+        />
+        <img
+          className="popup__tooltip-img"
+          src={content[props.status].img}
+          alt={props.status}
+        />
+        <p className="popup__tooltip-txt">{content[props.status].txt}</p>
+      </div>
+    </div>
+  );
 }
- export default InfoTooltip
+
+export default InfoTooltip;

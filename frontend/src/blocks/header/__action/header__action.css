@@ -1,0 +1,15 @@
+.header__action {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 0;
+  height: 0;
+  font-size: 18px;
+  line-height: 22px;
+  margin-left: 24px;
+}
+
+.header__action:hover {
+  cursor: pointer;
+  color: #a9a9a9;
+}

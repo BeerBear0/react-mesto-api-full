@@ -1,72 +1,72 @@
-import React from 'react'
-import PopupWithForm from "./PopupWithForm";
-import {CurrentUserContext} from "../contexts/CurrentUserContext";
+import React, { useState, useEffect, useContext } from 'react';
+import PopupWithForm from './PopupWithForm';
 
-function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-    const currentUser = React.useContext(CurrentUserContext)
+function EditProfilePopup(props) {
+  const [name, setName] = useState('');
+  const [desc, setDesc] = useState('');
 
-    const [name, setName] = React.useState('');
-    const [about, setAbout] = React.useState('');
+  const currentUser = useContext(CurrentUserContext);
 
-    function handleNameUpdate(e) {
-        setName(e.target.value);
-    }
+  function handleChangeName(evt) {
+    setName(evt.target.value);
+  }
 
-    function handleDescriptionUpdate(e) {
-        setAbout(e.target.value);
-    }
+  function handleChangeDescription(evt) {
+    setDesc(evt.target.value);
+  }
 
-    React.useEffect(() => {
-        setName(currentUser.name);
-        setAbout(currentUser.about);
-    }, [currentUser, isOpen]);
+  function handleSubmit(e) {
+    e.preventDefault();
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        onUpdateUser({
-            name: name,
-            about: about
-        })
-    }
+    props.onUpdateUser({
+      name,
+      about: desc,
+    });
+  }
 
-    return (
-        <PopupWithForm
-            title="Редактировать Профиль"
-            name="Edit-profile"
-            isOpen={isOpen}
-            onClose={onClose}
-            onSubmit={handleSubmit}
+  useEffect(() => {
+    setName(currentUser.name);
+    setDesc(currentUser.about);
+  }, [currentUser, props.isOpen]);
 
-        >
-            <input
-                onChange={handleNameUpdate}
-                className="popup__input popup__input_type_name"
-                value={name || ''}
-                type="text"
-                name="name"
-                id="name-input"
-                placeholder="Имя"
-                minLength="2"
-                maxLength="40"
-                required
-            />
-            <span className="popup__input-error" id="name-input-error" />
-            <input
-                onChange={handleDescriptionUpdate}
-                className="popup__input popup__input_type_about"
-                value={about || ''}
-                type="text"
-                name="about"
-                id="about-input"
-                placeholder="Работа"
-                minLength="2"
-                maxLength="200"
-                required
-            />
-            <span className="popup__input-error popup__input-error_two" id="job-input-error" />
-        </PopupWithForm>
-    )
+  return (
+    <PopupWithForm
+      title="Редактировать профиль"
+      name="editName"
+      isOpen={props.isOpen}
+      onClose={props.onClose}
+      onSubmit={handleSubmit}
+    >
+      <input
+        type="text"
+        name="editProfileName"
+        id="editProfileName"
+        className="popup__input"
+        placeholder="Имя"
+        required
+        minLength="2"
+        maxLength="40"
+        value={name || ''}
+        onChange={handleChangeName}
+      />
+      <span id="editProfileName-error" className="popup__error"/>
+      <input
+        type="text"
+        name="editProfileBio"
+        id="editProfileBio"
+        className="popup__input"
+        placeholder="Краткая информация"
+        required
+        minLength="2"
+        maxLength="200"
+        value={desc || ''}
+        onChange={handleChangeDescription}
+      />
+      <span id="editProfileBio-error" className="popup__error"/>
+    </PopupWithForm>
+  );
 }
 
-export default EditProfilePopup
+export default EditProfilePopup;

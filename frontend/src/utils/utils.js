@@ -8,8 +8,8 @@ export const formSelectorsList = {
 };
 export const ESC_CONST = 'Escape';
 export const API = {
-  // baseUrl: 'api.mesto.nikko.22.nomoredomains.monster'
-  baseUrl: 'localhost:3000'
+  baseUrl: 'api.mesto.nikko.22.nomoredomains.monster'
+  // baseUrl: 'localhost:3000'
 };
 export const POPUP_DEFAULT = {
   isEditProfilePopupOpen: false,

@@ -1,5 +1,3 @@
-.popup__image-container{
-    position: relative;
-    align-self: center;
-    z-index: 0;
+.popup__image-container {
+  margin: 0;
 }

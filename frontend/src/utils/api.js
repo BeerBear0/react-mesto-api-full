@@ -12,7 +12,8 @@ class Api {
     return res.json();
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
+    console.log(this._baseUrl)
     return fetch(`${this._baseUrl}/users/me`, {
       method: 'GET',
       credentials: 'include',
@@ -67,24 +68,37 @@ class Api {
     }).then(res => this._getResponseData(res));
   }
 
-  deleteCard(cardId) {
+  deleteCard(cardId, token) {
+    console.log(cardId)
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: 'DELETE',
       credentials: 'include',
+      headers: {
+        // 'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     }).then(res => this._getResponseData(res));
   }
 
-  addLike(cardId) {
+  addLike(cardId, token) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: 'PUT',
       credentials: 'include',
+      headers: {
+        // 'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     }).then(res => this._getResponseData(res));
   }
 
-  removeLike(cardId) {
+  removeLike(cardId, token) {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: 'DELETE',
       credentials: 'include',
+      headers: {
+        // 'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
     }).then(res => this._getResponseData(res));
   }
 
