@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
   let payload;
   if (!req.cookies.jwt) {
-    return next(new Error('Forbidden'));
+    return res.status(401).send({ message: 'Неправильный логин или пароль' });
   }
   // console.log(req.cookies.jwt, '123314');
   try {
