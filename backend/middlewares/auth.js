@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, next) => {
   let payload;
   if (!req.cookies.jwt) {
-    return res.status(401).send({ message: 'Неправильный логин или пароль' });
+    return next(new Error('No matches'));
   }
   // console.log(req.cookies.jwt, '123314');
   try {
